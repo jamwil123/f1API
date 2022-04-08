@@ -1,0 +1,28 @@
+{
+  "name": "f1api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jamwil123/f1API.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jamwil123/f1API/issues"
+  },
+  "homepage": "https://github.com/jamwil123/f1API#readme",
+  "dependencies": {
+    "admin": "^1.4.1",
+    "express": "^4.17.3",
+    "firebase": "^9.6.10",
+    "firebase-admin": "^10.0.2",
+    "jest": "^27.5.1",
+    "supertest": "^6.2.2"
+  }
+}
