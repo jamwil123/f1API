@@ -1,11 +1,20 @@
-const {fetchAllDrivers} = require('../Models/drivers')
+const {fetchAllDrivers, fetchOneDriver} = require('../Models/drivers')
+const {changeStringToUpperCaseFirstCharOnly} = require('../utils/utilityFunctions')
 
 
 const getAllDrivers = (req, res, next) =>{
-    fetchAllDrivers().then((mountains) => {
-        console.log(mountains)
-        res.status(200).send(mountains);
+    fetchAllDrivers().then((drivers) => {
+        res.status(200).send(drivers);
       })
 }
 
-module.exports = {getAllDrivers}
+const getSingleDrivers = (req, res, next) =>{
+    let driverName = changeStringToUpperCaseFirstCharOnly(req.params.drivername)
+    fetchOneDriver(driverName).then((driver)=>{
+        res.status(200).send(driver)
+    }).catch(({msg, status})=>{
+        res.status(status).send(msg)
+    })
+}
+
+module.exports = {getAllDrivers, getSingleDrivers}

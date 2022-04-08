@@ -9,7 +9,25 @@ const fetchAllDrivers = () =>{
         res.docs.map((drivers)=>{
             finalDrivers.push({name: drivers["_ref"]["_path"]["segments"][1], ...drivers.data()})
         })
+        
         return finalDrivers
     })
+
+
+   
 }
-module.exports = {fetchAllDrivers}
+
+const fetchOneDriver = (driversName) =>{
+    return db
+    .collection('drivers')
+    .doc(driversName)
+    .get()
+    .then((res)=>{
+        if(res.data() == undefined){
+            return Promise.reject({status: 404, msg: 'Drivers Name Not Found!'})
+        }
+        return res.data()
+    })
+        
+}
+module.exports = {fetchAllDrivers, fetchOneDriver}

@@ -1,5 +1,6 @@
 const request = require("supertest");
 const app = require("../app");
+const {changeStringToUpperCaseFirstCharOnly} = require('../utils/utilityFunctions')
 
 describe("/api/", () => {
   it("Status 200: GET returns the correct data ", () => {
@@ -35,5 +36,20 @@ describe("/api/", () => {
       .get("/api/driverss")
       .expect(404)
     })
+    it("Status 404: Wrong end point typed in (wrong data type)", ()=>{
+      return request(app)
+      .get("/api/drivers123")
+      .expect(404)
+    })
   });
+  describe("Util function: ChangeStringToUpperCaseFirstCharOnly", ()=>{
+    it('Inputs a string with underscores between names and returns with capitalised first character', ()=>{
+      expect(changeStringToUpperCaseFirstCharOnly("string_value")).toBe('String Value')
+      expect(changeStringToUpperCaseFirstCharOnly("string_value_aditional_words")).toBe('String Value Aditional Words')
+    })
+    it('Inputs a string with underscores between names and returns with capitalised first character even if it already starts capitalised', ()=>{
+      expect(changeStringToUpperCaseFirstCharOnly("string_value".toUpperCase())).toBe('String Value')
+      expect(changeStringToUpperCaseFirstCharOnly("string_value_aditional_words".toUpperCase())).toBe('String Value Aditional Words')
+    })
+  })
 });
