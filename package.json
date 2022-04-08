@@ -23,6 +23,10 @@
     "firebase": "^9.6.10",
     "firebase-admin": "^10.0.2",
     "jest": "^27.5.1",
-    "supertest": "^6.2.2"
+    "supertest": "^6.2.2",
+    "yarn": "^1.22.18"
+  },
+  "devDependencies": {
+    "jest-node-exports-resolver": "^1.1.6"
   }
 }
