@@ -26,7 +26,8 @@ const fetchOneDriver = (driversName) =>{
         if(res.data() == undefined){
             return Promise.reject({status: 404, msg: 'Drivers Name Not Found!'})
         }
-        return res.data()
+        let finalObject = {[driversName]: res.data()}
+        return finalObject
     })
         
 }

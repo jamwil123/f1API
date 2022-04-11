@@ -11,7 +11,7 @@ const getAllDrivers = (req, res, next) =>{
 const getSingleDrivers = (req, res, next) =>{
     let driverName = changeStringToUpperCaseFirstCharOnly(req.params.drivername)
     fetchOneDriver(driverName).then((driver)=>{
-        res.status(200).send(driver)
+        res.status(200).send([driver])
     }).catch(({msg, status})=>{
         res.status(status).send(msg)
     })
