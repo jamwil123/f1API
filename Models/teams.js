@@ -10,7 +10,6 @@ const fetchAllTeams = ()=>{
             if(finalDrivers.filter((x)=>drivers.data().Team == x.Team).length < 1)
             finalDrivers.push(drivers.data())
         })
-        
         return finalDrivers
     })
     

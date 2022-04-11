@@ -6,6 +6,6 @@ const { teamsRouter } = require("./teams-router");
 
 apiRouter.route("/").get(getAPI);
 apiRouter.use("/drivers", driversRouter);
-apiRouter.use("/teams", teamsRouter);
+apiRouter.use("/teams", teamsRouter)
 
 module.exports = { apiRouter };

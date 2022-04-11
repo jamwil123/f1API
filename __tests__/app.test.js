@@ -72,15 +72,25 @@ describe("/api/", () => {
   describe("/api/teams", () => {
     it("status 200: returns a full list of the teams", () => {
       return request(app)
-        .get("/api/teams/")
+        .get("/api/teams")
         .expect(200)
         .then(({ body }) => {
           expect(body[0]).toEqual({
-            Team: expect.any(String),
-          });
-          expect(body.length).toBe(10);
+            Team: expect.any(String)
+          })
+          expect(body.length).toBe(10)
         });
-    });
+    })
+    it('Status 404: When entered the wrong end point', ()=>{
+      return request(app)
+        .get("/api/teamsss")
+        .expect(404)
+    })
+    it('Status 404: When entered the wrong datatype in the end point', ()=>{
+      return request(app)
+        .get("/api/123456")
+        .expect(404)
+    })
   });
   describe("Util function: ChangeStringToUpperCaseFirstCharOnly", () => {
     it("Inputs a string with underscores between names and returns with capitalised first character", () => {
