@@ -19,15 +19,10 @@ const fetchAllTeams = ()=>{
 const fetchOneTeam = (teamName)=>{
     return db
     .collection('teams')
+    .doc(teamName)
     .get()
     .then((teams)=>{
-        const finalDrivers = []
-        res.docs.map((drivers)=>{
-            if(finalDrivers.filter((x)=>drivers.data().Team == x.Team).length < 1)
-            finalDrivers.push(drivers.data())
-        })
-        
-        return finalDrivers
+        return [ {[teamName]: {...teams.data()}}]
     })
 }
 

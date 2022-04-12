@@ -8,11 +8,13 @@ const getAllTeams = (req, res, next) =>{
 }
 
 const getOneTeam =(req, res, next)=>{
-    fetchOneTeam().then((team)=>{
-        console.log(team)
+    let teamName = changeStringToUpperCaseFirstCharOnly(req.params.teamname) 
+    fetchOneTeam(teamName).then((team)=>{
+        res.status(200).send(team)
     })
 }
 
 module.exports={
-    getAllTeams
+    getAllTeams,
+    getOneTeam
 }
