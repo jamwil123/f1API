@@ -76,21 +76,66 @@ describe("/api/", () => {
         .expect(200)
         .then(({ body }) => {
           expect(body[0]).toEqual({
-            Team: expect.any(String)
+            Team: expect.any(String),
+          });
+          expect(body.length).toBe(10);
+        });
+    });
+    it("Status 404: When entered the wrong end point", () => {
+      return request(app).get("/api/teamsss").expect(404);
+    });
+    it("Status 404: When entered the wrong datatype in the end point", () => {
+      return request(app).get("/api/123456").expect(404);
+    });
+  });
+  describe("/api/teams/constructors", () => {
+    it("status 200: Returns a list of all the constructors in desc order as default", () => {
+      return request(app)
+        .get("/api/teams/constructors")
+        .expect(200)
+        .then(({ body }) => {
+          body.map((team) => {
+            expect(team).toEqual({
+              [Object.keys(team)[0]]: expect.any(Object),
+            });
           })
-          expect(body.length).toBe(10)
+          expect(Object.keys(body[0])[0]).toEqual('Aston Martin')
         });
     })
-    it('Status 404: When entered the wrong end point', ()=>{
+    it('Status 200: Returns the constructors in asc order', ()=>{
       return request(app)
-        .get("/api/teamsss")
-        .expect(404)
+        .get("/api/teams/constructors?sort_by=asc")
+        .expect(200)
+        .then(({ body }) => {
+          body.map((team) => {
+            expect(team).toEqual({
+              [Object.keys(team)[0]]: expect.any(Object),
+            });
+          })
+          expect(body[0][Object.keys(body[0])[0]]["constructors-points"]).toBe(0)
+        });
     })
-    it('Status 404: When entered the wrong datatype in the end point', ()=>{
+    it('Status 200: Returns the constructors in desc order', ()=>{
       return request(app)
-        .get("/api/123456")
-        .expect(404)
+        .get("/api/teams/constructors?sort_by=desc")
+        .expect(200)
+        .then(({ body }) => {
+          body.map((team) => {
+            expect(team).toEqual({
+              [Object.keys(team)[0]]: expect.any(Object),
+            });
+          })
+          expect(Object.keys(body[0])[0]).toEqual('Aston Martin')
+        });
     })
+    it('Status 400: Injections prevented when using sort_by query', ()=>{
+      return request(app)
+        .get("/api/teams/constructors?sort_by=descccc")
+        .expect(400)
+        .then(({text}) => {
+          expect(text).toBe("Invalid sort query")
+    })
+  })
   });
   describe("Util function: ChangeStringToUpperCaseFirstCharOnly", () => {
     it("Inputs a string with underscores between names and returns with capitalised first character", () => {
