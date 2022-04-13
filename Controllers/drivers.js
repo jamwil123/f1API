@@ -1,4 +1,5 @@
-const {fetchAllDrivers, fetchOneDriver, putNewData} = require('../Models/drivers')
+
+const {fetchAllDrivers, fetchOneDriver, putNewData, removeDriversData} = require('../Models/drivers')
 const {changeStringToUpperCaseFirstCharOnly} = require('../utils/utilityFunctions')
 
 
@@ -20,10 +21,19 @@ const getSingleDrivers = (req, res, next) =>{
 const postNewData = (req, res, next) => {
     let rawPostData = req.body 
     putNewData(rawPostData).then((dataWritten)=>{
-        dataWritten ? res.status(201).send("Data written") : res.status(400).send('Data not written')
+    res.status(201).send(dataWritten)
     }).catch(()=>{
         res.status(400).send('Data not written')
     })
 }
 
-module.exports = {getAllDrivers, getSingleDrivers, postNewData}
+const deleteDriversData = (req, res, next) =>{ 
+    let rawData = req.body
+    removeDriversData(rawData).then((data)=>{
+        res.status(200).send("Resource deleted successfully")
+    }).catch(()=>{
+        res.status(400).send('Resource not deleted')
+    })
+}
+
+module.exports = {getAllDrivers, getSingleDrivers, postNewData, deleteDriversData}

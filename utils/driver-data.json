@@ -1,0 +1,142 @@
+[
+    {
+    "name": "Alex Albon",
+    "Team": "Williams",
+    "favourite_car": "",
+    "years_in_f1": 0,
+    "previous_seat": ""
+    },
+    {
+    "name": "Carlos Sainz",
+    "Team": "Ferrari",
+    "years_in_f1": 0,
+    "previous_seat": "",
+    "favourite_car": ""
+    },
+    {
+    "name": "Charles Leclerc",
+    "years_in_f1": 0,
+    "Team": "Ferrari",
+    "previous_seat": "",
+    "favourite_car": ""
+    },
+    {
+    "name": "Daniel Ricciardo",
+    "favourite_car": "",
+    "Team": "McLaren",
+    "previous_seat": "",
+    "years_in_f1": 0
+    },
+    {
+    "name": "Esteban Ocon",
+    "years_in_f1": 0,
+    "previous_seat": "",
+    "favourite_car": "",
+    "Team": "Alpine"
+    },
+    {
+    "name": "Fernando Alonso",
+    "years_in_f1": 0,
+    "favourite_car": "",
+    "Team": "Alpine",
+    "previous_seat": ""
+    },
+    {
+    "name": "George Russel",
+    "previous_seat": "",
+    "favourite_car": "",
+    "Team": "Mercedes",
+    "years_in_f1": 0
+    },
+    {
+    "name": "Kevin Magnussen",
+    "Team": "Haas",
+    "years_in_f1": 0,
+    "favourite_car": "",
+    "previous_seat": ""
+    },
+    {
+    "name": "Lance Stroll",
+    "previous_seat": "",
+    "Team": "Aston Martin",
+    "favourite_car": "",
+    "years_in_f1": 0
+    },
+    {
+    "name": "Lando Norris",
+    "years_in_f1": 0,
+    "Team": "McLaren",
+    "previous_seat": "",
+    "favourite_car": ""
+    },
+    {
+    "name": "Lewis Hamilton",
+    "favourite_car": "",
+    "Team": "Mercedes",
+    "years_in_f1": 0,
+    "previous_seat": ""
+    },
+    {
+    "name": "Max Verstappen",
+    "Team": "Red Bull",
+    "favourite_car": "",
+    "previous_seat": "",
+    "years_in_f1": 0
+    },
+    {
+    "name": "Mick Schumacher",
+    "years_in_f1": 0,
+    "favourite_car": "",
+    "Team": "Haas",
+    "previous_seat": ""
+    },
+    {
+    "name": "Nicholas Latifi",
+    "favourite_car": "",
+    "Team": "Williams",
+    "previous_seat": "",
+    "years_in_f1": 0
+    },
+    {
+    "name": "Pierre Gasly",
+    "Team": "Alpha Tauri",
+    "favourite_car": "",
+    "years_in_f1": 0,
+    "previous_seat": ""
+    },
+    {
+    "name": "Sebastian Vettel ",
+    "years_in_f1": 0,
+    "Team": "Aston Martin",
+    "favourite_car": "",
+    "previous_seat": ""
+    },
+    {
+    "name": "Sergio Pérez",
+    "favourite_car": "",
+    "previous_seat": "",
+    "years_in_f1": 0,
+    "Team": "Red Bull"
+    },
+    {
+    "name": "Valtteri Bottas",
+    "Team": "Alfa Romeo",
+    "years_in_f1": 0,
+    "previous_seat": "",
+    "favourite_car": ""
+    },
+    {
+    "name": "Yuki Tsunoda",
+    "years_in_f1": 0,
+    "favourite_car": "",
+    "previous_seat": "",
+    "Team": "Alpha Tauri"
+    },
+    {
+    "name": "Zhou Guanyu",
+    "previous_seat": "",
+    "years_in_f1": 0,
+    "Team": "Alfa Romeo",
+    "favourite_car": ""
+    }
+    ]

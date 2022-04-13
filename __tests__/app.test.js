@@ -1,4 +1,5 @@
 const request = require("supertest");
+const db = require('../db/db')
 const app = require("../app");
 const {
   changeStringToUpperCaseFirstCharOnly,
@@ -28,6 +29,9 @@ describe("/api/", () => {
           expect(body[0]).toEqual({
             Team: expect.any(String),
             name: expect.any(String),
+            previous_seat: expect.any(String),
+            years_in_f1: expect.any(Number),
+            favourite_car: expect.any(String)
           });
           expect(body.length).toBe(20);
         });
@@ -76,7 +80,8 @@ describe("/api/", () => {
         .expect(200)
         .then(({ body }) => {
           expect(body[0]).toEqual({
-            Team: expect.any(String),
+            'constructors-points': expect.any(Number),
+            'last-win': expect.any(String)
           });
           expect(body.length).toBe(10);
         });
@@ -134,6 +139,23 @@ describe("/api/", () => {
         .expect(400)
         .then(({text}) => {
           expect(text).toBe("Invalid sort query")
+    })
+  })
+  describe('/api/drivers/data/add_data', ()=>{
+    it('Status 200: POSTS new data into the DB', ()=>{
+      return request(app)
+      .post("/api/drivers/data/add_data")
+      .send({"new_data": "test data" })
+      .expect(201)
+      .then(({body})=>{
+        expect(body[0]['new_data']).toEqual('test data')
+        return body
+      }).then((drivers)=>{
+        return request(app)
+        .delete('/api/drivers/data/delete_data')
+        .send({"new_data": "test data" })
+        .expect(200)
+      })
     })
   })
   });

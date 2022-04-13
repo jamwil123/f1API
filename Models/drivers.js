@@ -32,22 +32,46 @@ const fetchOneDriver = (driversName) => {
 };
 
 const putNewData = async (rawData) => {
-  const res = await db
+  const res = await db.collection("drivers").get();
+
+  await Promise.all(
+    res.docs.map((driver) => {
+      let driversObjNewFields = { ...driver.data() };
+      Object.keys(rawData).map((key, i) => {
+        driversObjNewFields[key] = Object.values(rawData)[i];
+        return db
+          .collection("drivers")
+          .doc(driver["_ref"]["_path"]["segments"][1])
+          .set(driversObjNewFields);
+      });
+    })
+  )
+    const finalData = await db
+    .collection('drivers')
+    .get()
+
+    return finalData.docs.map((x)=>{return x.data()})
+  
+
+};
+
+const removeDriversData = (rawData) =>{
+    return db
     .collection("drivers")
     .get()
-   
-
-    await Promise.all(res.docs.map((driver) => {
-        let driversObjNewFields = { ...driver.data() };
-        Object.keys(rawData).map((key, i) => {
-            driversObjNewFields[key] = Object.values(rawData)[i]
-            return db.collection("drivers").doc(driver["_ref"]["_path"]["segments"][1]).set(driversObjNewFields);
+    .then((res) => {
+      return Promise.all(res.docs.map((drivers) => {
+        let driversObj = {...drivers.data()}
+        Object.keys(rawData).forEach((x)=>{
+            delete driversObj[x]
         })
+        return db
+        .collection('drivers')
+        .doc(driversObj.name)
+        .set(driversObj)
+        
       }))
-
-      return true
-
+    });
     
-      
-};
-module.exports = { fetchAllDrivers, fetchOneDriver, putNewData };
+}
+module.exports = { fetchAllDrivers, fetchOneDriver, putNewData, removeDriversData };

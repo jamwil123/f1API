@@ -2,15 +2,14 @@ const db = require("../db/db");
 
 const fetchAllTeams = ()=>{
     return db
-    .collection('drivers')
+    .collection('teams')
     .get()
     .then((res)=>{
-        const finalDrivers = []
-        res.docs.map((drivers)=>{
-            if(finalDrivers.filter((x)=>drivers.data().Team == x.Team).length < 1)
-            finalDrivers.push(drivers.data())
+       
+        return res.docs.map((drivers)=>{
+            return drivers.data()
         })
-        return finalDrivers
+        
     })
     
 }
