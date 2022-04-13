@@ -1,4 +1,4 @@
-const {fetchAllDrivers, fetchOneDriver} = require('../Models/drivers')
+const {fetchAllDrivers, fetchOneDriver, putNewData} = require('../Models/drivers')
 const {changeStringToUpperCaseFirstCharOnly} = require('../utils/utilityFunctions')
 
 
@@ -17,4 +17,13 @@ const getSingleDrivers = (req, res, next) =>{
     })
 }
 
-module.exports = {getAllDrivers, getSingleDrivers}
+const postNewData = (req, res, next) => {
+    let rawPostData = req.body 
+    putNewData(rawPostData).then((dataWritten)=>{
+        dataWritten ? res.status(201).send("Data written") : res.status(400).send('Data not written')
+    }).catch(()=>{
+        res.status(400).send('Data not written')
+    })
+}
+
+module.exports = {getAllDrivers, getSingleDrivers, postNewData}
