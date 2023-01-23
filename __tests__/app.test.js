@@ -104,7 +104,7 @@ describe("/api/", () => {
               [Object.keys(team)[0]]: expect.any(Object),
             });
           })
-          expect(Object.keys(body[0])[0]).toEqual('Aston Martin')
+          expect(Object.keys(body[0])[0]).toEqual('Alfa Romeo')
         });
     })
     it('Status 200: Returns the constructors in asc order', ()=>{
@@ -130,7 +130,7 @@ describe("/api/", () => {
               [Object.keys(team)[0]]: expect.any(Object),
             });
           })
-          expect(Object.keys(body[0])[0]).toEqual('Aston Martin')
+          expect(Object.keys(body[0])[0]).toEqual('Alfa Romeo')
         });
     })
     it('Status 400: Injections prevented when using sort_by query', ()=>{
@@ -181,5 +181,23 @@ describe("/api/", () => {
     it("returns a capitalised string when passed only one word with no underscore", () => {
       expect(changeStringToUpperCaseFirstCharOnly("mercedes")).toBe("Mercedes");
     });
-  });
+  })
+  describe("/api/teams/points/:teamname", ()=>{
+    it('Inputs an object with points and a team name and returns an object with the updated points', ()=>{
+      return request(app)
+      .get("/api/teams/alfa_romeo")
+      .expect(200)
+      .then((team)=>{
+        return team
+      }).then((teams)=>{
+      return request(app)
+      .patch("/api/teams/points/alfa_romeo")
+      .send({"points": 4 })
+      .expect(201)
+      .then((data)=>{ 
+        expect(data._body['constructors-points']).toBe(teams._body[0]['Alfa Romeo']["constructors-points"] + 4)
+      })
+    })
+    })
+  })
 });

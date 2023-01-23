@@ -55,6 +55,8 @@ const putNewData = async (rawData) => {
 
 };
 
+// Deletes a key on the drivers object. Example: deletes `"Years in F1": "1"` recursively from all drivers 
+
 const removeDriversData = (rawData) =>{
     return db
     .collection("drivers")
