@@ -1,7 +1,7 @@
 const { initializeApp, applicationDefault, cert } = require('firebase-admin/app');
 const { getFirestore, Timestamp, FieldValue } = require('firebase-admin/firestore');
 
-const serviceAccount = require("../utils/f1-api-58639-firebase-adminsdk-vz3ne-60fffadcae.json");
+const serviceAccount = require("../utils/f1-api-58639-firebase-adminsdk-vz3ne-62ad3d2b8d.json");
 
 
 
