@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/jamwil123/f1API#readme",
   "dependencies": {
+    "@types/supertest": "^6.0.2",
     "admin": "^1.4.1",
     "express": "^4.18.2",
     "firebase": "^9.6.10",
@@ -29,6 +30,7 @@
     "yarn": "^1.22.18"
   },
   "devDependencies": {
+    "@types/jest": "^29.5.11",
     "jest-node-exports-resolver": "^1.1.6"
   }
 }

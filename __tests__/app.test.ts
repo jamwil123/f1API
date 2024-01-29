@@ -1,9 +1,8 @@
-const request = require("supertest");
-const db = require('../db/db')
-const app = require("../app");
-const {
-  changeStringToUpperCaseFirstCharOnly,
-} = require("../utils/utilityFunctions");
+import { db } from "../db/db";
+import app from "../app";
+import { changeStringToUpperCaseFirstCharOnly } from "../utils/utilityFunctions";
+import { describe, it } from "node:test";
+import request, { Response } from "supertest";
 
 describe("/api/", () => {
   it("Status 200: GET returns the correct data ", () => {
@@ -14,12 +13,15 @@ describe("/api/", () => {
         expect(body["temp data"]).toBe("TEMP");
       });
   });
+
   it("Status 404: GET mis-spelled end point returns error", () => {
-    return request(app).get("/apii/").expect(404);
+    return request(app).get("/apii/").expect(404) as any;
   });
+
   it("Status 404: GET mis-spelled end point with wrong data type returns error", () => {
-    return request(app).get("/1234").expect(404);
+    return (request(app).get("/1234") as any).expect(404);
   });
+
   describe("/api/drivers", () => {
     it("status 200: GET gets all the drivers from the grid", () => {
       return request(app)
@@ -31,18 +33,21 @@ describe("/api/", () => {
             name: expect.any(String),
             previous_seat: expect.any(String),
             years_in_f1: expect.any(Number),
-            favourite_car: expect.any(String)
+            favourite_car: expect.any(String),
           });
           expect(body.length).toBe(20);
         });
     });
+
     it("Status 404: Wrong end point typed in", () => {
-      return request(app).get("/api/driverss").expect(404);
+      return (request(app).get("/api/driverss") as any).expect(404);
     });
+
     it("Status 404: Wrong end point typed in (wrong data type)", () => {
-      return request(app).get("/api/drivers123").expect(404);
+      return (request(app).get("/api/drivers123") as any).expect(404);
     });
   });
+
   describe("/api/drivers/:driversname", () => {
     it("Status 200: GETS driver data from a name in end point", () => {
       return request(app)
@@ -55,6 +60,7 @@ describe("/api/", () => {
           expect(body.length).toBe(1);
         });
     });
+
     it("Status 200: fetches the data even when uppercase letters are included", () => {
       return request(app)
         .get("/api/drivers/lEwIs_hAmIlToN")
@@ -66,13 +72,20 @@ describe("/api/", () => {
           expect(body.length).toBe(1);
         });
     });
-    it("Status 404: It will not return the data when names arent seperated by an underscore", () => {
-      return request(app).get("/api/drivers/LewisHamilton").expect(404);
+
+    it("Status 404: It will not return the data when names aren't separated by an underscore", () => {
+      return (request(app).get("/api/drivers/LewisHamilton") as any).expect(
+        404
+      );
     });
+
     it("Status 404: It will not return the data when the name is not in the database", () => {
-      return request(app).get("/api/drivers/Nikita_Mazepin").expect(404);
+      return (request(app).get("/api/drivers/Nikita_Mazepin") as any).expect(
+        404
+      );
     });
   });
+
   describe("/api/teams", () => {
     it("status 200: returns a full list of the teams", () => {
       return request(app)
@@ -80,19 +93,22 @@ describe("/api/", () => {
         .expect(200)
         .then(({ body }) => {
           expect(body[0]).toEqual({
-            'constructors-points': expect.any(Number),
-            'last-win': expect.any(String)
+            "constructors-points": expect.any(Number),
+            "last-win": expect.any(String),
           });
           expect(body.length).toBe(10);
         });
     });
+
     it("Status 404: When entered the wrong end point", () => {
-      return request(app).get("/api/teamsss").expect(404);
+      return (request(app).get("/api/teamsss") as any).expect(404);
     });
+
     it("Status 404: When entered the wrong datatype in the end point", () => {
-      return request(app).get("/api/123456").expect(404);
+      return (request(app).get("/api/123456") as any).expect(404);
     });
   });
+
   describe("/api/teams/constructors", () => {
     it("status 200: Returns a list of all the constructors in desc order as default", () => {
       return request(app)
@@ -103,11 +119,12 @@ describe("/api/", () => {
             expect(team).toEqual({
               [Object.keys(team)[0]]: expect.any(Object),
             });
-          })
-          expect(Object.keys(body[0])[0]).toEqual('Alfa Romeo')
+          });
+          expect(Object.keys(body[0])[0]).toEqual("Alfa Romeo");
         });
-    })
-    it('Status 200: Returns the constructors in asc order', ()=>{
+    });
+
+    it("Status 200: Returns the constructors in asc order", () => {
       return request(app)
         .get("/api/teams/constructors?sort_by=asc")
         .expect(200)
@@ -116,11 +133,14 @@ describe("/api/", () => {
             expect(team).toEqual({
               [Object.keys(team)[0]]: expect.any(Object),
             });
-          })
-          expect(body[0][Object.keys(body[0])[0]]["constructors-points"]).toBe(0)
+          });
+          expect(body[0][Object.keys(body[0])[0]]["constructors-points"]).toBe(
+            0
+          );
         });
-    })
-    it('Status 200: Returns the constructors in desc order', ()=>{
+    });
+
+    it("Status 200: Returns the constructors in desc order", () => {
       return request(app)
         .get("/api/teams/constructors?sort_by=desc")
         .expect(200)
@@ -129,75 +149,85 @@ describe("/api/", () => {
             expect(team).toEqual({
               [Object.keys(team)[0]]: expect.any(Object),
             });
-          })
-          expect(Object.keys(body[0])[0]).toEqual('Alfa Romeo')
+          });
+          expect(Object.keys(body[0])[0]).toEqual("Alfa Romeo");
         });
-    })
-    it('Status 400: Injections prevented when using sort_by query', ()=>{
+    });
+
+    it("Status 400: Injections prevented when using sort_by query", () => {
       return request(app)
         .get("/api/teams/constructors?sort_by=descccc")
         .expect(400)
-        .then(({text}) => {
-          expect(text).toBe("Invalid sort query")
-    })
-  })
-  describe('/api/drivers/data/add_data', ()=>{
-    it('Status 200: POSTS new data into the DB', ()=>{
-      return request(app)
-      .post("/api/drivers/data/add_data")
-      .send({"new_data": "test data" })
-      .expect(201)
-      .then(({body})=>{
-        expect(body[0]['new_data']).toEqual('test data')
-        return body
-      }).then((drivers)=>{
-        return request(app)
-        .delete('/api/drivers/data/delete_data')
-        .send({"new_data": "test data" })
-        .expect(200)
-      })
-    })
-  })
+        .then(({ text }) => {
+          expect(text).toBe("Invalid sort query");
+        });
+    });
+
+    describe("/api/drivers/data/add_data", () => {
+      it("Status 200: POSTS new data into the DB", () => {
+        return (request(app) as any)
+          .post("/api/drivers/data/add_data")
+          .send({ new_data: "test data" })
+          .expect(201)
+          .then(({ body }) => {
+            expect(body[0]["new_data"]).toEqual("test data");
+            return body;
+          })
+          .then((drivers) => {
+            return request(app)
+              .delete("/api/drivers/data/delete_data")
+              .send({ new_data: "test data" })
+              .expect(200);
+          });
+      });
+    });
   });
+
   describe("Util function: ChangeStringToUpperCaseFirstCharOnly", () => {
-    it("Inputs a string with underscores between names and returns with capitalised first character", () => {
+    it("Inputs a string with underscores between names and returns with a capitalized first character", () => {
       expect(changeStringToUpperCaseFirstCharOnly("string_value")).toBe(
         "String Value"
       );
       expect(
-        changeStringToUpperCaseFirstCharOnly("string_value_aditional_words")
-      ).toBe("String Value Aditional Words");
+        changeStringToUpperCaseFirstCharOnly("string_value_additional_words")
+      ).toBe("String Value Additional Words");
     });
-    it("Inputs a string with underscores between names and returns with capitalised first character even if it already starts capitalised", () => {
+
+    it("Inputs a string with underscores between names and returns with a capitalized first character even if it already starts capitalized", () => {
       expect(
         changeStringToUpperCaseFirstCharOnly("string_value".toUpperCase())
       ).toBe("String Value");
       expect(
         changeStringToUpperCaseFirstCharOnly(
-          "string_value_aditional_words".toUpperCase()
+          "string_value_additional_words".toUpperCase()
         )
-      ).toBe("String Value Aditional Words");
+      ).toBe("String Value Additional Words");
     });
-    it("returns a capitalised string when passed only one word with no underscore", () => {
+
+    it("returns a capitalized string when passed only one word with no underscore", () => {
       expect(changeStringToUpperCaseFirstCharOnly("mercedes")).toBe("Mercedes");
     });
-  })
-  describe("/api/teams/points/:teamname", ()=>{
-    it('Inputs an object with points and a team name and returns an object with the updated points', ()=>{
+  });
+
+  describe("/api/teams/points/:teamname", () => {
+    it("Inputs an object with points and a team name and returns an object with the updated points", () => {
       return request(app)
-      .get("/api/teams/alfa_romeo")
-      .expect(200)
-      .then((team)=>{
-        return team
-      }).then((teams)=>{
-      return request(app)
-      .patch("/api/teams/points/alfa_romeo")
-      .send({"points": 4 })
-      .expect(201)
-      .then((data)=>{ 
-        expect(data._body['constructors-points']).toBe(teams._body[0]['Alfa Romeo']["constructors-points"] + 4)
-      })
-    })
-    })
-  })
+        .get("/api/teams/alfa_romeo")
+        .expect(200)
+        .then((team) => {
+          return team;
+        })
+        .then((teams) => {
+          return request(app)
+            .patch("/api/teams/points/alfa_romeo")
+            .send({ points: 4 })
+            .expect(201)
+            .then((data) => {
+              expect(data.body["constructors-points"]).toBe(
+                teams.body[0]["Alfa Romeo"]["constructors-points"] + 4
+              );
+            });
+        });
+    });
+  });
 });
