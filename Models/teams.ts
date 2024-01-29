@@ -1,6 +1,6 @@
 import db from "../db/db";
 
-import { Team } from "../types/teams";
+import { Team, TeamStandings, Teams } from "../types/teams";
 
 export const fetchAllTeams = (): Promise<Team[]> => {
   return db
@@ -38,26 +38,25 @@ export const fetchConstructors = ({
   if (sort_by == undefined) {
     sort_by = "desc";
   }
+
   return db
     .collection("teams")
     .get()
     .then((teams) => {
-      const teamObject = teams.docs.map((team) => {
-        teamsObject.push({ [team.id]: { ...team.data() } });
-      });
-      return teamsObject;
-    })
-    .then((teamsData) => {
+      const teamsData: Team[] = teams.docs.map((team) => ({
+        ...(team.data() as Team),
+      }));
+
       return sort_by == "desc"
         ? [...teamsData].sort((a, b) =>
-            a[Object.keys(a)[0]]["constructors-points"] <
-            b[Object.keys(b)[0]]["constructors-points"]
+            a[0][Object.keys(a[0])[0]]["constructors-points"] <
+            b[0][Object.keys(b[0])[0]]["constructors-points"]
               ? 1
               : -1
           )
         : [...teamsData].sort((a, b) =>
-            a[Object.keys(a)[0]]["constructors-points"] >
-            b[Object.keys(b)[0]]["constructors-points"]
+            a[0][Object.keys(a[0])[0]]["constructors-points"] >
+            b[0][Object.keys(b[0])[0]]["constructors-points"]
               ? 1
               : -1
           );
@@ -72,14 +71,13 @@ export const removeTeamsData = (rawData: {
     .get()
     .then((res) => {
       return Promise.all(
-        res.docs.map((team) => {
+        res.docs.map(async (team) => {
           let teamsObj = { ...team.data() };
-          let nameOfTeam = team.id;
           Object.keys(rawData).forEach((x) => {
             delete teamsObj[x];
           });
-          return db.collection("teams").doc(nameOfTeam).set(teamsObj);
-        })
+          await db.collection("teams").doc(team.id).set(teamsObj);
+        }) as Promise<void>[]
       );
     });
 };
@@ -87,17 +85,20 @@ export const removeTeamsData = (rawData: {
 export const updateTeamsPoints = (
   points: number,
   teamName: string
-): Promise<Team> => {
+): Promise<TeamStandings> => {
   return db
-    .collection("teams")
+    .collection("team-standings")
     .doc(teamName)
     .get()
     .then((res) => {
-      if (res.data() == undefined) {
+      const teamStandings: TeamStandings = res.data() as TeamStandings;
+      if (teamStandings == undefined) {
         throw new Error("Team does not exist");
       }
-      let teamObject = res.data();
-      teamObject["constructors-points"] += points;
+      let teamObject: TeamStandings = {
+        ...teamStandings,
+        points: (teamStandings?.points || 0) + points,
+      };
       return db
         .collection("teams")
         .doc(teamName)
@@ -108,41 +109,8 @@ export const updateTeamsPoints = (
             .doc(teamName)
             .get()
             .then((res) => {
-              return res.data();
+              return res.data() as TeamStandings;
             });
-        });
-    });
-};
-
-export const updateTeamData = (
-  teamData: Team[],
-  teamName: string
-): Promise<{ [key: string]: Team }> => {
-  return db
-    .collection("teams")
-    .doc(teamName)
-    .get()
-    .then((res) => {
-      if (res.data() == undefined) {
-        throw new Error("Team does not exist");
-      }
-      let oldTeamData = { ...res.data() };
-      teamData.forEach((key) => {
-        let newKeys = Object.keys(key);
-        oldTeamData[newKeys] = key[newKeys];
-      });
-      return oldTeamData;
-    })
-    .then((res) => {
-      return db.collection("teams").doc(teamName).set(res);
-    })
-    .then(() => {
-      return db
-        .collection("teams")
-        .doc(teamName)
-        .get()
-        .then((res) => {
-          return [{ [`${teamName}`]: { ...res.data() } }];
         });
     });
 };
