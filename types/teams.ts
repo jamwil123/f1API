@@ -1,17 +1,17 @@
 export interface Team {
   chassis: string;
   currentDrivers: string[];
-  firstEntry: number;
+  firstEntry: string;
   fullTeamName: string;
-  highestRaceFinish: number;
+  highestRaceFinish: string;
   powerUnit: string;
   teamBase: string;
   teamChief: string;
   technicalChief: string;
-  totalFastestLaps: number;
-  totalPolePositions: number;
-  totalWins: number;
-  worldConstructorChampionships: number;
+  totalFastestLaps: string;
+  totalPolePositions: string;
+  totalWins: string;
+  worldConstructorChampionships: string;
 }
 
 export interface Teams {

@@ -26,7 +26,6 @@ const getOneTeam = (req, res, next) => {
 
 const getConstructors = (req, res, next) => {
   const sortBy = req.query["sort_by"];
-  console.log(sortBy);
   fetchConstructors(sortBy)
     .then((con) => {
       res.status(200).send(con);

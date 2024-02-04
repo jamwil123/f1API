@@ -33,19 +33,37 @@ export const fetchOneTeam = (
 export const fetchConstructors = (
   sort_by?: "asc" | "desc"
 ): Promise<Team[]> => {
+  if (
+    sort_by !== undefined &&
+    typeof sort_by === "string" &&
+    sort_by !== "asc" &&
+    sort_by !== "desc"
+  ) {
+    return Promise.reject({
+      msg: "Invalid sort_by value.",
+      status: 400,
+    });
+  }
+
   return db
     .collection("teams")
     .get()
     .then((teams) => {
-      const teamsData: Team[] = teams.docs.map((team) => ({
+      let teamsData: Team[] = teams.docs.map((team) => ({
         ...(team.data() as Team),
       }));
-      if (sort_by === "desc") {
-        return teamsData.sort((a, b) => b.totalWins - a.totalWins);
-      } else if (sort_by === "asc") {
-        return teamsData.sort((a, b) => a.totalWins - b.totalWins);
+
+      if (sort_by === "asc") {
+        return teamsData.sort((a, b) =>
+          a.fullTeamName.localeCompare(b.fullTeamName)
+        );
       }
-      // Default return if sort_by is not "desc" or "asc"
+
+      // Default sort (desc)
+      teamsData = teamsData.sort((a, b) =>
+        b.fullTeamName.localeCompare(a.fullTeamName)
+      );
+
       return teamsData;
     });
 };
@@ -122,7 +140,7 @@ export const updateKeys = async () => {
     // Wait for all updates to complete
     await Promise.all(updatePromises);
 
-    console.log("Keys updated successfully.");
+    ("Keys updated successfully.");
   } catch (error: any) {
     console.error("Error updating keys in Firestore:", error.message);
     throw error;

@@ -1,9 +1,10 @@
 import { Firestore } from "firebase-admin/firestore";
 import { Driver } from "../types/drivers";
 
-const db: Firestore = require("../db/db");
+import { db } from "../db/db";
 
 export const fetchAllDrivers = (): Promise<Driver[]> => {
+  console.log("drivers Model");
   return db
     .collection("drivers")
     .get()
@@ -14,6 +15,10 @@ export const fetchAllDrivers = (): Promise<Driver[]> => {
             ...drivers.data(),
           } as Driver)
       );
+    })
+    .catch((error) => {
+      console.error("Error fetching drivers:", error);
+      throw error; // Re-throw the error to propagate it
     });
 };
 
@@ -75,3 +80,39 @@ export const removeDriversData = (rawData: {
       );
     });
 };
+
+export const changeDriverKeys = async () => {
+  try {
+    const snapshot = await db.collection("drivers").get();
+
+    const updatedDrivers = snapshot.docs.map((doc) => {
+      const originalData = doc.data();
+      const transformedData = transformKeys(originalData);
+
+      // Update the document with the transformed data
+      return doc.ref.set(transformedData);
+    });
+
+    // Wait for all updates to complete
+    await Promise.all(updatedDrivers);
+
+    console.log("Driver keys updated successfully.");
+  } catch (error) {
+    console.error("Error updating driver keys:", error);
+  }
+};
+
+function transformKeys(obj: Record<string, any>): Record<string, any> {
+  const transformedObj: Record<string, any> = {};
+
+  for (const [key, value] of Object.entries(obj)) {
+    const camelCasedKey = key
+      .replace(/[-_](.)/g, (_, c) => c.toUpperCase()) // Remove hyphens and underscores, and capitalize next character
+      .replace(/'/g, ""); // Remove apostrpphie
+
+    transformedObj[camelCasedKey] =
+      typeof value === "object" ? transformKeys(value) : value;
+  }
+
+  return transformedObj;
+}

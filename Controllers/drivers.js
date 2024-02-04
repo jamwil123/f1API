@@ -3,13 +3,16 @@ const {
   fetchOneDriver,
   putNewData,
   removeDriversData,
+  changeDriverKeys,
 } = require("../Models/drivers");
 const {
   changeStringToUpperCaseFirstCharOnly,
 } = require("../utils/utilityFunctions");
 
 const getAllDrivers = (req, res, next) => {
+  ("drivers contorller");
   fetchAllDrivers().then((drivers) => {
+    drivers;
     res.status(200).send(drivers);
   });
 };
@@ -46,10 +49,16 @@ const deleteDriversData = (req, res, next) => {
       res.status(400).send("Resource not deleted");
     });
 };
+const updateDriverKeys = (req, res, next) => {
+  changeDriverKeys().then((drivers) => {
+    res.status(200).send(drivers);
+  });
+};
 
 module.exports = {
   getAllDrivers,
   getSingleDrivers,
   postNewData,
   deleteDriversData,
+  updateDriverKeys,
 };
