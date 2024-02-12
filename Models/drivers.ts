@@ -4,7 +4,6 @@ import { Driver } from "../types/drivers";
 import { db } from "../db/db";
 
 export const fetchAllDrivers = (): Promise<Driver[]> => {
-  console.log("drivers Model");
   return db
     .collection("drivers")
     .get()
@@ -22,7 +21,7 @@ export const fetchAllDrivers = (): Promise<Driver[]> => {
     });
 };
 
-export const fetchOneDriver = (
+export const fetchOneDriver = async (
   driversName: string
 ): Promise<{ [key: string]: Driver }> => {
   return db
@@ -95,8 +94,6 @@ export const changeDriverKeys = async () => {
 
     // Wait for all updates to complete
     await Promise.all(updatedDrivers);
-
-    console.log("Driver keys updated successfully.");
   } catch (error) {
     console.error("Error updating driver keys:", error);
   }

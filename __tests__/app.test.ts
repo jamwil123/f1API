@@ -1,7 +1,7 @@
 import app from "../app";
 import { Driver } from "../types/drivers";
 import { Team } from "../types/teams";
-import { changeStringToUpperCaseFirstCharOnly } from "../utils/utilityFunctions";
+import { formatSnakeCaseToTitleCase } from "../utils/utilityFunctions";
 import request from "supertest";
 
 describe("/api/", () => {
@@ -226,6 +226,42 @@ describe("/api/teams/constructors", () => {
   });
 });
 
+describe("/api/races/:year/:raceName", () => {
+  it("Status 200: Returns the specific race when a name is supplied", async () => {
+    // Test data
+    const year = 2022;
+    const raceName = "austria"; // Adjust the raceName to match your actual race name
+
+    // Execute the request
+    const response = await request(app).get(`/api/races/${year}/${raceName}`);
+
+    // Assertions
+    expect(response.status).toBe(200);
+    expect(Array.isArray(response.body)).toBe(true);
+    expect(response.body.length).toBeGreaterThan(0);
+
+    // Add more specific assertions based on the structure of your expected result
+    response.body.forEach((race) => {
+      expect(race).toHaveProperty("date");
+      expect(race).toHaveProperty("winner");
+      expect(race).toHaveProperty("final-grid");
+      expect(race).toHaveProperty("laps");
+      expect(race).toHaveProperty("race-name");
+      expect(race).toHaveProperty("winner-car");
+      // Validate the structure of the finalGrid array
+      expect(Array.isArray(race["final-grid"])).toBe(true);
+      race["final-grid"].forEach((gridItem) => {
+        expect(gridItem).toHaveProperty("car-driven");
+        expect(typeof gridItem["car-driven"]).toEqual("string");
+        expect(gridItem).toHaveProperty("drivers-name");
+        expect(typeof gridItem["drivers-name"]).toEqual("string");
+      });
+    });
+  });
+
+  // Add more tests for error cases, invalid parameters, etc.
+});
+
 describe("/api/drivers/data/add_data", () => {
   it("Status 200: POSTS new data into the DB", () => {
     return request(app)
@@ -247,26 +283,22 @@ describe("/api/drivers/data/add_data", () => {
 
 describe("Util function: ChangeStringToUpperCaseFirstCharOnly", () => {
   it("Inputs a string with underscores between names and returns with a capitalized first character", () => {
-    expect(changeStringToUpperCaseFirstCharOnly("string_value")).toBe(
-      "String Value"
+    expect(formatSnakeCaseToTitleCase("string_value")).toBe("String Value");
+    expect(formatSnakeCaseToTitleCase("string_value_additional_words")).toBe(
+      "String Value Additional Words"
     );
-    expect(
-      changeStringToUpperCaseFirstCharOnly("string_value_additional_words")
-    ).toBe("String Value Additional Words");
   });
 
   it("Inputs a string with underscores between names and returns with a capitalized first character even if it already starts capitalized", () => {
+    expect(formatSnakeCaseToTitleCase("string_value".toUpperCase())).toBe(
+      "String Value"
+    );
     expect(
-      changeStringToUpperCaseFirstCharOnly("string_value".toUpperCase())
-    ).toBe("String Value");
-    expect(
-      changeStringToUpperCaseFirstCharOnly(
-        "string_value_additional_words".toUpperCase()
-      )
+      formatSnakeCaseToTitleCase("string_value_additional_words".toUpperCase())
     ).toBe("String Value Additional Words");
   });
 
   it("returns a capitalized string when passed only one word with no underscore", () => {
-    expect(changeStringToUpperCaseFirstCharOnly("mercedes")).toBe("Mercedes");
+    expect(formatSnakeCaseToTitleCase("mercedes")).toBe("Mercedes");
   });
 });

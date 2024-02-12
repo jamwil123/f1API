@@ -1,3 +1,5 @@
+import { formatSnakeCaseToTitleCase } from "../utils/utilityFunctions";
+
 const {
   fetchAllDrivers,
   fetchOneDriver,
@@ -10,15 +12,14 @@ const {
 } = require("../utils/utilityFunctions");
 
 const getAllDrivers = (req, res, next) => {
-  ("drivers contorller");
   fetchAllDrivers().then((drivers) => {
     drivers;
     res.status(200).send(drivers);
   });
 };
 
-const getSingleDrivers = (req, res, next) => {
-  let driverName = changeStringToUpperCaseFirstCharOnly(req.params.drivername);
+const getSingleDriver = (req, res, next) => {
+  let driverName = formatSnakeCaseToTitleCase(req.params.drivername);
   fetchOneDriver(driverName)
     .then((driver) => {
       res.status(200).send([driver]);
@@ -57,7 +58,7 @@ const updateDriverKeys = (req, res, next) => {
 
 module.exports = {
   getAllDrivers,
-  getSingleDrivers,
+  getSingleDrivers: getSingleDriver,
   postNewData,
   deleteDriversData,
   updateDriverKeys,
