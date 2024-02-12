@@ -7,7 +7,7 @@ import {
 export const fetchRace = (year: number): Promise<any> => {
   const currentYear = new Date().getFullYear();
 
-  if (year < 1900 || year > currentYear) {
+  if (year < 1950 || year > currentYear) {
     return Promise.reject(
       new Error(
         "Invalid year. Please provide a year between 1900 and the current year."
@@ -37,7 +37,7 @@ export const fetchRaceByName = async (
   // Validate input parameters
   if (
     !Number.isInteger(year) ||
-    year < 1900 ||
+    year < 1950 ||
     year > new Date().getFullYear()
   ) {
     return Promise.reject(new Error("Invalid year parameter"));
