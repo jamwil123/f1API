@@ -4,6 +4,7 @@
  * @returns {string} A human-readable string with the first letter of each word in uppercase.
  */
 export const formatSnakeCaseToTitleCase = (string: string) => {
+  if (!string || undefined) return undefined;
   return string
     .toLowerCase()
     .split("_")
@@ -26,5 +27,6 @@ export function hyphenToCamelCase(input: string): string {
  * @returns {string} A string with the first letter capitalised.
  */
 export const formatFirstCharToUppercase = (string: string) => {
+  if (!string) return undefined;
   return string.charAt(0).toUpperCase() + string.slice(1);
 };

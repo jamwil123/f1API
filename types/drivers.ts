@@ -12,3 +12,10 @@ export interface Driver {
   totalPoints: string;
   totalWins: string;
 }
+
+export interface DriversStandings {
+  car: String;
+  name: String;
+  nationality: String;
+  points: Number;
+}

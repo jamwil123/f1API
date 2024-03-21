@@ -6,6 +6,7 @@ const {
   putNewData,
   removeDriversData,
   changeDriverKeys,
+  fetchDriversStandings,
 } = require("../Models/drivers");
 const {
   changeStringToUpperCaseFirstCharOnly,
@@ -56,10 +57,19 @@ const updateDriverKeys = (req, res, next) => {
   });
 };
 
+const getDriverStandings = (req, res, next) => {
+  const standingsNumber = parseInt(req.query.standingsNumber);
+  const driversName = formatSnakeCaseToTitleCase(req.query?.driversName);
+  fetchDriversStandings(standingsNumber, driversName).then((standings) => {
+    res.status(200).send(standings);
+  });
+};
+
 module.exports = {
   getAllDrivers,
   getSingleDrivers: getSingleDriver,
   postNewData,
   deleteDriversData,
   updateDriverKeys,
+  getDriverStandings,
 };

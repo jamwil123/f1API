@@ -1,5 +1,6 @@
 const {
   changeStringToUpperCaseFirstCharOnly,
+  formatFirstCharToUppercase,
 } = require("../utils/utilityFunctions");
 const {
   fetchAllTeams,
@@ -9,6 +10,7 @@ const {
   updateTeamsPoints,
   updateTeamData,
   updateKeys,
+  fetchTeamStandings,
 } = require("../Models/teams");
 
 const getAllTeams = (req, res, next) => {
@@ -66,6 +68,14 @@ const patchTeamData = (req, res, next) => {
   });
 };
 
+const getTeamStandings = (req, res, next) => {
+  const standingsNumber = req.query.standingsNumber;
+  const teamName = formatFirstCharToUppercase(req.query.teamName);
+  fetchTeamStandings(standingsNumber, teamName).then((standings) => {
+    res.status(200).send(standings);
+  });
+};
+
 const renameKeys = (req, res, next) => {
   updateKeys().then((team) => {
     res.status(200).send(team);
@@ -80,4 +90,5 @@ module.exports = {
   updateConstructorsPoints,
   patchTeamData,
   renameKeys,
+  getTeamStandings,
 };

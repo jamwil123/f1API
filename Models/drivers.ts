@@ -1,5 +1,5 @@
 import { Firestore } from "firebase-admin/firestore";
-import { Driver } from "../types/drivers";
+import { Driver, DriversStandings } from "../types/drivers";
 
 import { db } from "../db/db";
 
@@ -98,6 +98,48 @@ export const changeDriverKeys = async () => {
     console.error("Error updating driver keys:", error);
   }
 };
+
+export const fetchDriversStandings = (standingsNumber, driversName) => {
+  // Validate standingsNumber
+  if (
+    (standingsNumber && !Number.isInteger(standingsNumber)) ||
+    standingsNumber < 1 ||
+    standingsNumber > 20
+  ) {
+    return Promise.reject(
+      new Error(
+        "Invalid standingsNumber. It must be a number between 1 and 20."
+      )
+    );
+  }
+
+  if (driversName) {
+    return db
+      .collection("drivers-standings")
+      .get()
+      .then((drivers) => {
+        return drivers.docs
+          .map((driver) => driver.data())
+          .filter((driver) => driver.name === driversName);
+      });
+  }
+
+  return db
+    .collection("drivers-standings")
+    .doc(standingsNumber.toString()) // Assuming the document names are numbers
+    .get()
+    .then((doc) => {
+      if (doc.exists) {
+        return doc.data();
+      } else {
+        throw new Error("No standings found for the specified number.");
+      }
+    });
+};
+
+/**
+ * UTIL FUNCTIONS
+ */
 
 function transformKeys(obj: Record<string, any>): Record<string, any> {
   const transformedObj: Record<string, any> = {};

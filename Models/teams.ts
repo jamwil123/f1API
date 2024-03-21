@@ -146,3 +146,46 @@ export const updateKeys = async () => {
     throw error;
   }
 };
+
+export const fetchTeamStandings = (standingsNumber, teamName) => {
+  // Validate standingsNumber
+  if (
+    (standingsNumber && !Number.isInteger(standingsNumber)) ||
+    standingsNumber < 1 ||
+    standingsNumber > 20
+  ) {
+    return db
+      .collection("team-standings")
+      .doc(standingsNumber.toString()) // Assuming the document names are numbers
+      .get()
+      .then((doc) => {
+        if (doc.exists) {
+          return doc.data();
+        } else {
+          throw new Error("No standings found for the specified number.");
+        }
+      });
+  }
+
+  if (teamName && typeof teamName === "string") {
+    return db
+      .collection("team-standings")
+      .get()
+      .then((teams) => {
+        return teams.docs
+          .map((team) => team.data())
+          .filter((team) => team.name === teamName);
+      });
+  }
+
+  if (!teamName && !standingsNumber) {
+    console.log("inside");
+    return db
+      .collection("team-standings")
+      .get()
+      .then((standings) => {
+        return standings.docs.map((standing) => standing.data());
+      });
+  }
+  throw new Error("Selection invalid");
+};
